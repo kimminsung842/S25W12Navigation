@@ -1,35 +1,59 @@
 import SwiftUI
 
 struct ContentView: View {
+    var body: some View {
+        TabView {
+            SongView()
+                .tabItem {
+                    Image(systemName: "list.bullet")
+                    Text("Songs")
+                }
+            SingerView()
+                .tabItem {
+                    Image(systemName: "person")
+                    Text("Singer")
+                }
+        }
+    }
+}
+
+struct SongView: View {
     @State private var viewModel = SongViewModel()
     
     var body: some View {
         NavigationStack(path: $viewModel.path) {
-            List(viewModel.songs) { song in
-                NavigationLink(value: song) {
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(song.title)
-                                .font(.headline)
-                            Text(song.singer)
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                        }
-                    }
-                }
-            }
+            SongListView(viewModel: viewModel)
             .navigationDestination(for: Song.self) { song in
                 SongDetailView(song: song)
+            }
+            .navigationTitle("노래")
+        }
+    }
+}
+
+struct SongListView: View {
+    let viewModel: SongViewModel
+    
+    var body: some View {
+        List(viewModel.songs) { song in
+            NavigationLink(value: song) {
+                VStack(alignment: .leading) {
+                    Text(song.title)
+                        .font(.headline)
+                    Text(song.singer)
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
             }
         }
     }
 }
 
-//struct SingerView: View {
-//    var body: some View {
-//        Text("가수 화면")
-//    }
-//}
+struct SingerView: View {
+    var body: some View {
+        Text("가수 화면")
+    }
+}
 
 struct SongDetailView: View {
     let song: Song
